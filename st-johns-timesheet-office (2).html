@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St. John's Lutheran Church - Job #2491 Time Tracker (OFFICE)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00a19d 0%, #8edbbb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #00a19d 0%, #8edbbb 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header h2 {
+            font-size: 18px;
+            font-weight: normal;
+            opacity: 0.9;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ffb344;
+        }
+        
+        .instructions h3 {
+            color: #00a19d;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .instructions li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .instructions li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00a19d;
+            font-weight: bold;
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        select, input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: #00a19d;
+        }
+        
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #00a19d 0%, #ffb344 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 161, 157, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            display: block;
+            border-left: 5px solid #00a19d;
+        }
+        
+        .summary h3 {
+            color: #00a19d;
+            margin-bottom: 15px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffb344;
+        }
+        
+        .summary-item label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .summary-item .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .office-section {
+            background: #0e1e00;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .office-section h2 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .records-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .records-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .records-table th {
+            background: #1a3300;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .records-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+        
+        .records-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .records-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .success-message {
+            background: #d4f4f2;
+            color: #0e1e00;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px;
+            border-left: 5px solid #00a19d;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .time-inputs {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .records-table {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>St. John's Lutheran Church</h1>
+            <h2>Job #2491 - Voluntary Hours Tracker</h2>
+        </div>
+        
+        <div class="instructions">
+            <h3>Important Information</h3>
+            <ul>
+                <li>Technicians have the option to voluntarily come in early or stay late Monday through Friday to help complete work on the St. John's Lutheran Church project (Job #2491).</li>
+                <li>Participation is completely voluntary.</li>
+                <li>Any time worked before or after normal hours will be off the clock.</li>
+                <li>Comp time will be provided in exchange for voluntary hours worked.</li>
+                <li>For every 4 hours logged on this form employees will earn 4 hours of comp time which can be used the same way PTO is used.</li>
+                <li>Be sure to accurately record your time on the designated form for comp time credit.</li>
+                <li><strong>Clock in when you ARRIVE at the church and clock out when you LEAVE the church.</strong></li>
+                <li><strong>Supply house and dumpster stops are NOT to be included in your time punches.</strong></li>
+                <li><strong>GPS history will be reviewed to confirm what time you arrived on and off the job.</strong></li>
+                <li><strong>When your regularly scheduled shift starts or ends, you will need to punch in using HouseCall Pro per standard company policy.</strong></li>
+                <li><strong>Thank you for your dedication and teamwork in helping complete this project efficiently!</strong></li>
+            </ul>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            Time entry recorded successfully!
+        </div>
+        
+        <div class="form-section">
+            <form id="timeForm">
+                <div class="form-group">
+                    <label for="technician">Select Technician</label>
+                    <select id="technician" required>
+                        <option value="">-- Choose Technician --</option>
+                        <option value="Ryan Mierzejewski">Ryan Mierzejewski</option>
+                        <option value="Josh Arak">Josh Arak</option>
+                        <option value="Weston Kurtz">Weston Kurtz</option>
+                        <option value="Dan Baumert">Dan Baumert</option>
+                        <option value="Tori Kasperowicz">Tori Kasperowicz</option>
+                        <option value="Brian Yoder">Brian Yoder</option>
+                        <option value="Derrick Behney">Derrick Behney</option>
+                    </select>
+                </div>
+                
+                <div class="time-inputs">
+                    <div class="form-group">
+                        <label for="clockIn">Clock In Time</label>
+                        <input type="datetime-local" id="clockIn" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clockOut">Clock Out Time</label>
+                        <input type="datetime-local" id="clockOut" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn">Submit Time Entry</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="summary" id="technicianSummary">
+            <h3>📊 Your Hours Summary</h3>
+            <p style="margin-bottom: 15px; color: #666; font-size: 14px;">Select your name above to view your personal totals</p>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <label>Total Hours Worked</label>
+                    <div class="value" id="totalHours">0.0</div>
+                </div>
+                <div class="summary-item">
+                    <label>Comp Time Earned</label>
+                    <div class="value" id="compTime">0.0</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="office-section">
+            <h2>🔒 OFFICE USE ONLY</h2>
+            
+            <div class="records-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Technician</th>
+                            <th>Clock In</th>
+                            <th>Clock Out</th>
+                            <th>Hours Worked</th>
+                            <th>Comp Time Accrued</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allRecords">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">No entries yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary-grid" style="margin-top: 30px;">
+                <div class="summary-item">
+                    <label>Total Project Hours</label>
+                    <div class="value" id="projectTotalHours">0.0</div>
+                </div>
+                <div class="summary-item">
+                    <label>Total Comp Time</label>
+                    <div class="value" id="projectTotalComp">0.0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBy-FzhygA85IpjHou-afNTwtWqn8XTWUs",
+            authDomain: "st-johns-off-clock-time-clock.firebaseapp.com",
+            projectId: "st-johns-off-clock-time-clock",
+            storageBucket: "st-johns-off-clock-time-clock.firebasestorage.app",
+            messagingSenderId: "413842555915",
+            appId: "1:413842555915:web:a9fe31a4aa6142f7d1b30e",
+            measurementId: "G-RSDP63S0EV"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Initialize data structure
+        let timeEntries = [];
+        
+        // Listen to real-time updates from Firestore
+        const q = query(collection(db, "timeEntries"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            timeEntries = [];
+            snapshot.forEach((doc) => {
+                timeEntries.push({ id: doc.id, ...doc.data() });
+            });
+            console.log('Loaded entries from Firebase:', timeEntries.length);
+            
+            // Update displays
+            const selectedTech = document.getElementById('technician').value;
+            if (selectedTech) {
+                updateTechnicianSummary(selectedTech);
+            }
+            updateOfficeRecords();
+        });
+        
+        // Form submission
+        document.getElementById('timeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            console.log('Form submitted');
+            
+            const technician = document.getElementById('technician').value;
+            const clockIn = document.getElementById('clockIn').value;
+            const clockOut = document.getElementById('clockOut').value;
+            
+            console.log('Values:', { technician, clockIn, clockOut });
+            
+            // Validate all fields are filled
+            if (!technician) {
+                alert('Please select a technician!');
+                return;
+            }
+            
+            if (!clockIn) {
+                alert('Please enter a clock in time!');
+                return;
+            }
+            
+            if (!clockOut) {
+                alert('Please enter a clock out time!');
+                return;
+            }
+            
+            // Validate times
+            if (new Date(clockOut) <= new Date(clockIn)) {
+                alert('Clock out time must be after clock in time!');
+                return;
+            }
+            
+            // Calculate hours
+            const hoursWorked = calculateHours(clockIn, clockOut);
+            const compTime = hoursWorked; // 1:1 ratio as per instructions
+            
+            console.log('Hours calculated:', hoursWorked);
+            
+            // Create entry
+            const entry = {
+                technician,
+                clockIn,
+                clockOut,
+                hoursWorked,
+                compTime,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save entry to Firebase
+            try {
+                await addDoc(collection(db, "timeEntries"), entry);
+                console.log('Entry saved to Firebase:', entry);
+                
+                // Show success message
+                const successMsg = document.getElementById('successMessage');
+                successMsg.classList.add('show');
+                setTimeout(() => successMsg.classList.remove('show'), 3000);
+                
+                // Reset form
+                document.getElementById('timeForm').reset();
+                
+                // Scroll to success message
+                successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (error) {
+                console.error('Error saving entry:', error);
+                alert('Error saving time entry. Please try again.');
+            }
+        });
+        
+        // Update technician dropdown to show their summary
+        document.getElementById('technician').addEventListener('change', function() {
+            if (this.value) {
+                updateTechnicianSummary(this.value);
+            }
+        });
+        
+        function calculateHours(startTime, endTime) {
+            const start = new Date(startTime);
+            const end = new Date(endTime);
+            const diffMs = end - start;
+            const diffHours = diffMs / (1000 * 60 * 60);
+            return Math.round(diffHours * 10) / 10; // Round to 1 decimal
+        }
+        
+        function updateTechnicianSummary(technician) {
+            const techEntries = timeEntries.filter(e => e.technician === technician);
+            const totalHours = techEntries.reduce((sum, e) => sum + e.hoursWorked, 0);
+            const totalComp = techEntries.reduce((sum, e) => sum + e.compTime, 0);
+            
+            document.getElementById('totalHours').textContent = totalHours.toFixed(1);
+            document.getElementById('compTime').textContent = totalComp.toFixed(1);
+        }
+        
+        function updateOfficeRecords() {
+            const tbody = document.getElementById('allRecords');
+            
+            if (timeEntries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No entries yet</td></tr>';
+                document.getElementById('projectTotalHours').textContent = '0.0';
+                document.getElementById('projectTotalComp').textContent = '0.0';
+                return;
+            }
+            
+            // Sort by most recent first
+            const sortedEntries = [...timeEntries].sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+            
+            tbody.innerHTML = sortedEntries.map(entry => `
+                <tr>
+                    <td><strong>${entry.technician}</strong></td>
+                    <td>${formatDateTime(entry.clockIn)}</td>
+                    <td>${formatDateTime(entry.clockOut)}</td>
+                    <td>${entry.hoursWorked.toFixed(1)} hrs</td>
+                    <td>${entry.compTime.toFixed(1)} hrs</td>
+                </tr>
+            `).join('');
+            
+            // Calculate totals
+            const projectTotalHours = timeEntries.reduce((sum, e) => sum + e.hoursWorked, 0);
+            const projectTotalComp = timeEntries.reduce((sum, e) => sum + e.compTime, 0);
+            
+            document.getElementById('projectTotalHours').textContent = projectTotalHours.toFixed(1);
+            document.getElementById('projectTotalComp').textContent = projectTotalComp.toFixed(1);
+        }
+        
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            return date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+    </script>
+</body>
+</html>
